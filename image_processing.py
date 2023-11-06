@@ -22,7 +22,7 @@ def total_images(data_dir):
     return total_images
 
 def split_dataset(loc, data_dir='dataset',split=2):
-    
+
     if os.path.isdir(f'{data_dir}/split'):
         shutil.rmtree(f'{data_dir}/split')
     if split==3:
@@ -164,61 +164,20 @@ def rename(input_images_dir, selected_disease=None):
     print(f'Renamed images are saved in: {renamed_images_path}')
 
 
-def augmentation(input_images_dir, before_split=True, times=10, subset='train'):
+def augmentation(input_images_dir, times=10):
     if os.path.isdir('dataset/augmented_images'):
         shutil.rmtree('dataset/augmented_images')
-    if before_split:
-        p = Augmentor.Pipeline(input_images_dir, output_directory='../augmented_images')
-        p.rotate_random_90(probability=1)
-        p.flip_left_right(probability=1)
-        p.flip_top_bottom(probability=1)
-        p.rotate180(probability=1)
+    p = Augmentor.Pipeline(input_images_dir, output_directory='../augmented_images')
+    p.rotate_random_90(probability=1)
+    p.flip_left_right(probability=1)
+    p.flip_top_bottom(probability=1)
+    p.rotate180(probability=1)
 
+    p.rotate_random_90(probability=1)
+    p.flip_top_bottom(probability=1)
+    p.flip_left_right(probability=1)
+    p.rotate180(probability=1)
 
-        p.rotate_random_90(probability=1)
-        p.flip_top_bottom(probability=1)
-        p.flip_left_right(probability=1)
-        p.rotate180(probability=1)
-        
-        num_augmented_images = total_images(input_images_dir)*times
-        p.sample(num_augmented_images)
-        print(f'Augmented images are saved in: dataset/augmented_images')
-    else:
-        if subset=='train':
-            p = Augmentor.Pipeline(input_images_dir, output_directory='../new_train')
-
-            p.rotate_random_90(probability=1)
-            p.flip_left_right(probability=1)
-            p.flip_top_bottom(probability=1)
-            p.rotate180(probability=1)
-
-
-            p.rotate_random_90(probability=1)
-            p.flip_top_bottom(probability=1)
-            p.flip_left_right(probability=1)
-            p.rotate180(probability=1)
-
-
-            num_augmented_images = total_images(input_images_dir)*times
-            p.sample(num_augmented_images)
-            shutil.rmtree('dataset/split/train')
-            os.rename(f'dataset/split/new_train', f'dataset/split/train')
-            print(f'Augmented images are saved in: dataset/split/train')
-        else:
-            p = Augmentor.Pipeline(input_images_dir, output_directory='../new_val')
-            
-            p.rotate_random_90(probability=1)
-            p.flip_left_right(probability=1)
-            p.flip_top_bottom(probability=1)
-            p.rotate180(probability=1)
-
-            # p.rotate_random_90(probability=1)
-            # p.flip_top_bottom(probability=1)
-            # p.flip_left_right(probability=1)
-            # p.rotate180(probability=1)
-
-            num_augmented_images = total_images(input_images_dir)*times
-            p.sample(num_augmented_images)
-            shutil.rmtree('dataset/split/val')
-            os.rename(f'dataset/split/new_val', f'dataset/split/val')
-            print(f'Augmented images are saved in: dataset/split/val')
+    num_augmented_images = total_images(input_images_dir)*times
+    p.sample(num_augmented_images)
+    print(f'Augmented images are saved in: dataset/augmented_images')
